@@ -28,12 +28,14 @@ public class CustomerRcrdActivity extends AppCompatActivity {
     private ListView lv;
     private long mId;
 
-    //<<<<<<<<<< new class variables
     private String original_FName, original_LName, original_CarMake, original_CarModel, original_CarCost;
     private boolean mLoaded = false;
     private Button mViewButton, mUpdateButton, mAddButton, mDeleteButton;
     private ArrayList<Customer> mCustomers = new ArrayList<>();
     private List<EditText> mAlleditTexts = new ArrayList<>();
+
+
+    private boolean mAddorEditModeFlag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -44,30 +46,42 @@ public class CustomerRcrdActivity extends AppCompatActivity {
         // GET Intent THAT STARTED ACTIVITY
         Intent intent = getIntent();
 
-        // INSTANTIATE DATABASE HANDLER
-        dh = new DatabaseHandler(this);
-
         FName = (EditText) findViewById(R.id.editText2_FName);
         LName = (EditText) findViewById(R.id.editText2_LName);
         CarMake = (EditText) findViewById(R.id.editText2_CarMake);
         CarModel = (EditText) findViewById(R.id.editText2_CarModel);
         CarCost = (EditText) findViewById(R.id.editText2_CarCost);
 
-        //<<<<<<<<<<< ADDED
         mAlleditTexts.add(FName);
         mAlleditTexts.add(LName);
         mAlleditTexts.add(CarMake);
         mAlleditTexts.add(CarModel);
         mAlleditTexts.add(CarCost);
         lv = (ListView) findViewById(R.id.list1);
-        //<<<<<<<<<< END OF ADDED
 
         mViewButton = (Button) findViewById(R.id.button_CR_view);
         mAddButton = (Button) findViewById(R.id.button_CR_add);
         mUpdateButton = (Button) findViewById(R.id.button_CR_update);
         mDeleteButton = (Button) findViewById(R.id.button_CR_delete);
 
-        mViewButton.setVisibility(View.GONE); // never Show and free screen space
+        //Handle Edit or Add as passed from invoking activity
+        mAddorEditModeFlag = intent.getBooleanExtra(
+                MainActivity.INTENTEXTA_ADD_OR_EDIT_FLAG,
+                false
+        );
+        mId = intent.getLongExtra(
+                MainActivity.INTENTEXTRA_CUSTOMER_ID_To_PASS,
+                -1
+        );
+
+        // INSTANTIATE DATABASE HANDLER
+        dh = new DatabaseHandler(this);
+
+        if (mAddorEditModeFlag == MainActivity.MODE_CUSTOMER_EDIT) {
+            dataModel = dh.getCustomerById(mId);
+            setEditTextsForUpdate();
+        }
+
         mViewButton.setText("CLEAR"); // Hijack View Button for clear data
         mViewButton.setVisibility(View.VISIBLE); // Show the View (now CLEAR)
         mAddButton.setEnabled(false); // Can't click Add as nothing to add
@@ -186,11 +200,18 @@ public class CustomerRcrdActivity extends AppCompatActivity {
     private void updateCustomer()
     {
         getValues();
-         if (dh.updateCustomer(dataModel, mId)>0) {
-             Toast.makeText(getApplicationContext(), "Customer Updated Successfully", Toast.LENGTH_LONG).show();
-         } else {
-             Toast.makeText(getApplicationContext(), "Customer Not Updated", Toast.LENGTH_LONG).show();
-         }
+        if (dh.updateCustomer(new Customer(
+                F_Name,
+                        L_Name,
+                        Car_Make,
+                        Car_Model,
+                        d_Car_Cost
+                ),
+                mId)>0) {
+            Toast.makeText(getApplicationContext(), "Customer Updated Successfully", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "Customer Not Updated", Toast.LENGTH_LONG).show();
+        }
     }
     // INSERT DATA INTO DATABASE
     private void addCustomer()
@@ -273,17 +294,7 @@ public class CustomerRcrdActivity extends AppCompatActivity {
                     dataModel = mCustomers.get(position);
                     Customer x = da.getItem(position);
                     //<<<<<<<<<< Added
-                    FName.setText(dataModel.getFName());
-                    LName.setText(dataModel.getLName());
-                    CarMake.setText(dataModel.get_CarMake());
-                    CarModel.setText(dataModel.get_CarModel());
-                    CarCost.setText(String.valueOf(dataModel.get_CarCost()));
-                    mLoaded = true;
-                    setOriginalValues();
-                    mDeleteButton.setEnabled(true);
-                    mUpdateButton.setEnabled(false);
-                    mAddButton.setEnabled(false);
-                    mId = dataModel.getID();
+                    setEditTextsForUpdate();
                     //<<<<<<<<<< End of Added
                     Toast.makeText(getApplicationContext(), String.valueOf(dataModel.getID()), Toast.LENGTH_SHORT).show();
                 }
@@ -291,5 +302,20 @@ public class CustomerRcrdActivity extends AppCompatActivity {
         } else {
             da.notifyDataSetChanged();
         }
+    }
+
+    private void setEditTextsForUpdate() {
+
+        FName.setText(dataModel.getFName());
+        LName.setText(dataModel.getLName());
+        CarMake.setText(dataModel.get_CarMake());
+        CarModel.setText(dataModel.get_CarModel());
+        CarCost.setText(String.valueOf(dataModel.get_CarCost()));
+        mLoaded = true;
+        setOriginalValues();
+        mDeleteButton.setEnabled(true);
+        mUpdateButton.setEnabled(false);
+        mAddButton.setEnabled(false);
+        mId = dataModel.getID();
     }
 }
