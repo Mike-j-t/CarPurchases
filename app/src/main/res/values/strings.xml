@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CarPurchases</string>
+    <string name="content_main_title">Car Thinngy</string>
+    <string name="ContentMain_button_CD_add">ADD</string>
+</resources>

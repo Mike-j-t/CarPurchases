@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/editText2_FName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="First Name"
+        android:onClick="buttonClicked"/>
+    <EditText
+        android:id="@+id/editText2_LName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Last Name"
+        android:onClick="buttonClicked"/>
+    <EditText
+        android:id="@+id/editText2_CarMake"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Make of Car"
+        android:onClick="buttonClicked"/>
+    <EditText
+        android:id="@+id/editText2_CarModel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Model of Car"
+        android:onClick="buttonClicked"/>
+    <EditText
+        android:id="@+id/editText2_CarCost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:hint="000.00"
+        android:onClick="buttonClicked"/>
+    <Button
+        android:id="@+id/button_CR_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="UPDATE"
+        android:onClick="buttonClicked"/>
+    <Button
+        android:id="@+id/button_CR_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ADD"
+        android:onClick="buttonClicked"/>
+    <Button
+        android:id="@+id/button_CR_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DELETE"
+        android:onClick="buttonClicked"/>
+    <Button
+        android:id="@+id/button_CR_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="VIEW"
+        android:onClick="buttonClicked"/>
+    <ListView
+        android:id="@+id/list1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FF9999FF">
+    </ListView>
+</LinearLayout>
